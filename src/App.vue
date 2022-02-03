@@ -2,7 +2,7 @@
   <div id="app">
     <Header />
     <Login />
-    <router-view/>
+    <!-- <router-view/> -->
     <Footer />
   </div>
 </template>
@@ -13,7 +13,6 @@ import Login from "./components/Login.vue";
 import Footer from "./components/Footer.vue";
 
 export default {
-  name: "App",
   components: {
     Header,
     Login,

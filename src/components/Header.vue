@@ -1,16 +1,15 @@
 <template>
-    <header>
-        <p>
-            Header
-        </p>    
-    </header>
+  <header>
+    <p>{{ name }}</p>
+  </header>
 </template>
 
 <script>
 export default {
-  name: "Header",
-  props: {
-    msg: String,
+  data() {
+    return {
+      name: 'Header'
+    }
   },
 };
 </script>
@@ -18,5 +17,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

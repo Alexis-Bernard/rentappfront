@@ -1,16 +1,17 @@
 <template>
-    <footer>
-        <p>
-            Footer
-        </p>    
-    </footer>
+  <footer>
+    <p>
+      {{ name }}
+    </p>
+  </footer>
 </template>
 
 <script>
 export default {
-  name: "Footer",
-  props: {
-    msg: String,
+  data() {
+    return {
+      name: "Footer",
+    };
   },
 };
 </script>
@@ -18,5 +19,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>
