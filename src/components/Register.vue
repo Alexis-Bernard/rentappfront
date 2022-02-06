@@ -176,7 +176,7 @@ export default {
       return this.$store.state.auth.status.loggedIn;
     },
     isAdmin() {
-      return this.$store.state.auth.user.auth_level == 2;
+      return this.$store.state.auth.user?.auth_level == 2;
     },
   },
   props: ["userToEdit"],
