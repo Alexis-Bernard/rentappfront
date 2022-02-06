@@ -1,1 +1,1 @@
-exports.API_URL = "http://api.ascoz.tk/"
+exports.API_URL = "https://api.ascoz.tk/"
