@@ -99,7 +99,7 @@
             type="text"
             :value="userToEdit.auth_level"
           />
-          <label for="auth_level">Birth place</label>
+          <label for="auth_level">Auth level (1=Owner | 2=Admin)</label>
           <ErrorMessage name="auth_level" class="helper-text red-text" />
         </div>
 
@@ -152,6 +152,8 @@ export default {
         .max(50, "Must be maximum 50 characters !"),
       phone_number: yup
         .number()
+        .max(2147000000, "The phone number is too big !")
+        .min(0, "Phone number can't be negative !")
         .typeError("Phone number must be a number !")
         .required("Phone number is required !"),
       firstname: yup.string().required("Firstname is required !"),
