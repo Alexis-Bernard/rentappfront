@@ -1,133 +1,216 @@
 <template>
   <div class="card grey lighten-4">
     <div class="card-content">
-      <div id="register">
-        <h2>Register</h2>
+      <h2 v-if="edit">Edit profile</h2>
+      <h2 v-else>Register</h2>
 
+      <Form @submit="handleRegister" :validation-schema="schema">
         <div class="input-field">
-          <input
-            id="register_username"
-            v-model="register_username"
+          <Field
+            id="username"
+            name="username"
             type="text"
-            class="validate"
+            :disabled="edit"
+            :value="userToEdit.username"
           />
-          <label for="register_username">Username</label>
+          <label for="username">Username</label>
+          <ErrorMessage name="username" class="helper-text red-text" />
         </div>
 
         <div class="input-field">
-          <input
-            id="register_password"
-            v-model="register_password"
-            type="password"
-            class="validate"
-          />
-          <label for="register_password">Password</label>
+          <Field id="password" name="password" type="password" />
+          <label v-if="edit" for="password">
+            Password (can be not informed)
+          </label>
+          <label v-else for="password"> Password </label>
+          <ErrorMessage name="password" class="helper-text red-text" />
         </div>
 
         <div class="input-field">
-          <input
-            id="register_email"
-            v-model="register_email"
+          <Field
+            id="email"
+            name="email"
+            type="email"
+            :value="userToEdit.email"
+          />
+          <label for="email">Email</label>
+          <ErrorMessage name="email" class="helper-text red-text" />
+        </div>
+
+        <div class="input-field">
+          <Field
+            id="phone_number"
+            name="phone_number"
             type="text"
-            class="validate"
+            :value="userToEdit.phone_number"
           />
-          <label for="register_email">Email</label>
+          <label for="phone_number">Phone number</label>
+          <ErrorMessage name="phone_number" class="helper-text red-text" />
         </div>
 
         <div class="input-field">
-          <input
-            id="register_firstname"
-            v-model="register_firstname"
+          <Field
+            id="firstname"
+            name="firstname"
             type="text"
-            class="validate"
+            :value="userToEdit.firstname"
           />
-          <label for="register_firstname">Firstname</label>
+          <label for="firstname">Firstname</label>
+          <ErrorMessage name="firstname" class="helper-text red-text" />
         </div>
 
         <div class="input-field">
-          <input
-            id="register_lastname"
-            v-model="register_lastname"
+          <Field
+            id="lastname"
+            name="lastname"
             type="text"
-            class="validate"
+            :value="userToEdit.lastname"
           />
-          <label for="register_lastname">Lastname</label>
+          <label for="lastname">Lastname</label>
+          <ErrorMessage name="lastname" class="helper-text red-text" />
         </div>
 
         <div class="input-field">
-          <input
-            id="register_birthday"
-            v-model="register_birthday"
+          <Field
+            id="birthday"
+            name="birthday"
             type="text"
-            class="validate"
+            :value="userToEdit.birthday"
           />
-          <label for="register_birthday">birthday</label>
+          <label for="birthday">Birthday</label>
+          <ErrorMessage name="birthday" class="helper-text red-text" />
         </div>
 
         <div class="input-field">
-          <input
-            id="register_birthplace"
-            v-model="register_birthplace"
+          <Field
+            id="birthplace"
+            name="birthplace"
             type="text"
-            class="validate"
+            :value="userToEdit.birthplace"
           />
-          <label for="register_birthplace">Birth place</label>
+          <label for="birthplace">Birth place</label>
+          <ErrorMessage name="birthplace" class="helper-text red-text" />
         </div>
 
-        <div class="input-field">
-          <input
-            id="register_phone_number"
-            v-model="register_phone_number"
-            type="number"
-            class="validate"
+        <div v-if="isAdmin" class="input-field">
+          <Field
+            id="auth_level"
+            name="auth_level"
+            type="text"
+            :value="userToEdit.auth_level"
           />
-          <label for="register_phone_number">phone number</label>
+          <label for="auth_level">Birth place</label>
+          <ErrorMessage name="auth_level" class="helper-text red-text" />
         </div>
 
-        <a class="waves-effect waves-light btn" @click="register">Sign up</a>
-      </div>
+        <button class="waves-effect waves-light btn" :disabled="loading">
+          <div v-if="edit">Save and exit</div>
+          <div v-else>Sign up</div>
+        </button>
+
+        <div>
+          <label v-if="message" class="helper-text red-text">
+            {{ message }}
+          </label>
+        </div>
+      </Form>
     </div>
   </div>
 </template>
 
 <script>
+import { Form, Field, ErrorMessage } from "vee-validate";
+import UserService from "../services/account.service";
+import M from "materialize-css";
+import * as yup from "yup";
+
 export default {
   name: "Register",
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
   data() {
+    const schema = yup.object().shape({
+      username: yup
+        .string()
+        .required("Username is required !")
+        .min(3, "Must be at least 3 characters !")
+        .max(20, "Must be maximum 20 characters !"),
+      password: this.userToEdit.username
+        ? yup.string().max(40, "Must be maximum 40 characters !")
+        : yup
+            .string()
+            .required("Password is required !")
+            .min(6, "Must be at least 6 characters !")
+            .max(40, "Must be maximum 40 characters !"),
+      email: yup
+        .string()
+        .required("Email is required !")
+        .email("Email is invalid !")
+        .max(50, "Must be maximum 50 characters !"),
+      phone_number: yup
+        .number()
+        .typeError("Phone number must be a number !")
+        .required("Phone number is required !"),
+      firstname: yup.string().required("Firstname is required !"),
+      lastname: yup.string().required("Lastname is required !"),
+      birthday: yup
+        .date()
+        .typeError("Birthday is incorrect !")
+        .required("Birthday is required !"),
+      birthplace: yup.string().required("Birth place is required !"),
+    });
+
     return {
-      register_username: "",
-      register_password: "",
-      register_email: "",
-      register_firstname: "",
-      register_lastname: "",
-      register_birthday: "",
-      register_birthplace: "",
-      register_phone_number: "",
+      successful: false,
+      loading: false,
+      message: "",
+      schema,
+      edit: false,
     };
   },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+    isAdmin() {
+      return this.$store.state.auth.user.auth_level == 2;
+    },
+  },
+  props: ["userToEdit"],
+  mounted() {
+    if (this.loggedIn) {
+      if (this.userToEdit.username) {
+        this.edit = true;
+
+        M.updateTextFields();
+      } else {
+        this.$router.push("/tenants");
+      }
+    }
+  },
   methods: {
-    async register() {
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: this.register_username,
-          password: this.register_password,
-          firstname: this.register_firstname,
-          lastname: this.register_lastname,
-          birthday: this.register_birthday,
-          birthplace: this.register_birthplace,
-          phone_number: this.register_phone_number,
-          email: this.register_email,
-        }),
-      };
+    async handleRegister(user) {
+      this.message = "";
+      this.successful = false;
+      this.loading = true;
 
-      let res = await fetch(process.env.VUE_APP_API_ACCOUNTS, requestOptions);
+      try {
+        if (this.edit) {
+          await UserService.update(user);
+        } else {
+          await this.$store.dispatch("auth/register", user);
+        }
 
-      if (res.status == 201) {
-        alert("Created !");
+        this.$router.back();
+      } catch (err) {
+        this.message = this.edit ? "An error has occured !" : "Username already exists !";
+
+        this.successful = false;
+      } finally {
+        this.loading = false;
       }
     },
   },

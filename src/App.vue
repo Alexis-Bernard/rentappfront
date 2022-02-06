@@ -1,20 +1,34 @@
 <template>
-  <router-link v-if="showAdminBoard" to="/admin"> Admin Board </router-link>
-
-  <router-link v-if="currentUser" to="/profile"> User </router-link>
-
-  <router-link to="/"> Login </router-link>
-
-  <router-link v-if="!currentUser" to="/register"> Register </router-link>
-
   <div v-if="currentUser">
-    <router-link to="/profile">
+    <router-link
+      v-if="showAdminBoard"
+      class="waves-effect waves-light btn"
+      to="/admin"
+    >
+      Admin panel
+    </router-link>
+
+    <router-link class="waves-effect waves-light btn" to="/profile">
       {{ currentUser.username }}
     </router-link>
 
-    <a @click.prevent="logOut">
+    <!-- <router-link class="waves-effect waves-light btn" to="/tenants">
+      My tenants
+    </router-link> -->
+
+    <a @click.prevent="logOut" class="waves-effect waves-light btn">
       <span>Logout</span>
     </a>
+  </div>
+
+  <div v-else>
+    <router-link class="waves-effect waves-light btn" to="/">
+      Login
+    </router-link>
+
+    <router-link class="waves-effect waves-light btn" to="/register">
+      Register
+    </router-link>
   </div>
 
   <!-- Page content -->
@@ -30,11 +44,7 @@ export default {
       return this.$store.state.auth.user;
     },
     showAdminBoard() {
-      if (this.currentUser && this.currentUser["auth_level"]) {
-        return this.currentUser["auth_level"] == 2;
-      }
-
-      return false;
+      return this.$store.state.auth.user.auth_level == 2
     },
   },
   methods: {

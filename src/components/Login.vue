@@ -5,14 +5,14 @@
 
       <Form @submit="handleLogin" :validation-schema="schema">
         <div class="input-field">
-          <Field name="username" type="text" />
-          <label>Username</label>
+          <Field id="username" name="username" type="text" />
+          <label for="username">Username</label>
           <ErrorMessage name="username" class="helper-text red-text" />
         </div>
 
         <div class="input-field">
-          <Field name="password" type="password" />
-          <label>Password</label>
+          <Field id="password" name="password" type="password" />
+          <label for="password">Password</label>
           <ErrorMessage name="password" class="helper-text red-text" />
         </div>
 
@@ -58,9 +58,9 @@ export default {
       return this.$store.state.auth.status.loggedIn;
     },
   },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/profile");
+  beforeCreate() {
+    if (this.$store.state.auth.user) {
+      this.$router.push("/tenants");
     }
   },
   methods: {
@@ -69,7 +69,7 @@ export default {
 
       try {
         await this.$store.dispatch("auth/login", user);
-        this.$router.push("/profile");
+        this.$router.push("/tenants");
       } catch (err) {
         this.message = "Wrong username or password !";
       } finally {

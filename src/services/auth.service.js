@@ -1,14 +1,13 @@
 import axios from 'axios';
-
-const API_URL="http://127.0.0.1:3000/"
+import env from './env'
 
 class AuthService {
   async login(user) {
-    let res = await axios.post(API_URL + 'login', {
+    let res = await axios.post(env.API_URL + 'login', {
       username: user.username,
       password: user.password
     })
-
+    
     if (res.data.accessToken) {
       localStorage.setItem('user', JSON.stringify(res.data));
     }
@@ -21,11 +20,18 @@ class AuthService {
   }
 
   async register(user) {
-    return await axios.post(API_URL + 'accounts', {
+    let res = await axios.post(env.API_URL + 'accounts', {
       username: user.username,
+      password: user.password,
       email: user.email,
-      password: user.password//HERE add other fields
+      phone_number: user.phone_number,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      birthday: user.birthday,
+      birthplace: user.birthplace
     });
+
+    return res.data
   }
 }
 
