@@ -11,6 +11,12 @@
         >
           <div>
             <button
+              class="waves-effect waves-light btn red"
+              @click="deleteProfile(account)"
+            >
+              delete
+            </button>
+            <button
               class="waves-effect waves-light btn"
               @click="editProfile(account)"
             >
@@ -60,6 +66,11 @@ export default {
         name: "editProfile", // /profile/edit
         params: account,
       });
+    },
+    async deleteProfile(account) {
+      await UserService.delete(account.username);
+
+      this.accounts = await UserService.getAll();
     },
   },
 };

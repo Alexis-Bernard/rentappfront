@@ -20,6 +20,12 @@ class AccountService {
     
     return res.data
   }
+
+  async delete(username) {
+    let res = await axios.delete(env.API_URL + 'accounts/' + username, { headers: authHeader() });
+    
+    return res.data
+  }
 }
 
 export default new AccountService();
