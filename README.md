@@ -20,10 +20,5 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
-
 ## Links
-https://github.com/bezkoder/vue-3-authentication-jwt
+https://github.com/bezkoder/vue-3-authentication-jw
